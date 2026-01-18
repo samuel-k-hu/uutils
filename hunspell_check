@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+
+use strict;
+
+my $file = shift;
+
+my @hunspell_output = `hunspell -a $file`;
+my %misspelled_words;  # { word => message }
+my %misspelled_lines;  # { nrow => [ word, message ] }
+
+foreach (@hunspell_output) {
+    next if /^\*/ || /^$/ || /^@/;
+    if ( /^#/ ) {
+        my (undef, $word, undef) = split /\s/;
+        $misspelled_words{$word} = '';
+    } 
+    if ( /^&/ ) {
+        my ($word, undef, undef, $message) = /\& (\w+) (\d+) (\d+): (.+)/;
+        $misspelled_words{$word} = $message;
+    }
+}
+
+my $regex_for_grep = join '|', keys %misspelled_words;
+my @grep_output = `grep -onHE "$regex_for_grep" $file`;
+
+foreach ( @grep_output ) {
+    chomp;
+    my ( $file, $nrow, $word ) = /(.+):(\d+):(.+)/;
+    $misspelled_lines{$nrow} = [ $word,  $misspelled_words{$word} ];
+}
+
+foreach ( keys %misspelled_lines ) {
+    my $nrow = $_;
+    my $word = $misspelled_lines{$nrow}->[0];
+    my $message = $misspelled_lines{$nrow}->[1];
+    print "$file:$nrow:$word => $message\n";
+}

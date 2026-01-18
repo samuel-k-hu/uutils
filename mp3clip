@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+
+use strict;
+
+use File::Spec;
+use Digest::SHA qw(sha256_hex);
+use Getopt::Std qw(getopts);
+
+my %opts;
+
+getopts( 'a:t:o:', \%opts );
+
+if (!$opts{'a'} || !$opts{'t'} || !$opts{'o'})  {
+    die;
+}
+
+open my $fh, '<', $opts{'t'};
+
+while (<$fh>) {
+    chomp;
+    my ( $s, $e, $t ) = split /\t/;
+    my $out =
+      File::Spec->catfile( $opts{'o'}, substr( sha256_hex($t), 0, 16 ) );
+    system("ffmpeg -y -loglevel error -i $opts{'a'} -ss $s -to $e -c copy ${out}.mp3");
+    print "$t\n";
+}
+
+close($fh);

@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Getopt::Std qw(getopts);
+use List::Util  qw/shuffle/;
+use Digest::SHA qw(sha256_hex);
+use File::Spec;
+
+my %opts;
+my $fh;
+my $data;
+my @list = ();
+
+getopts( 'rf:d:', \%opts );
+
+if ( $opts{'f'} ) {
+    open $fh, '<', $opts{'f'};
+}
+else {
+    open $fh, '<-';
+}
+
+if ( $opts{'d'} ) {
+    $data = $opts{'d'};
+}
+elsif ( -e 'audio' ) {
+    $data = 'audio';
+}
+else {
+    die;
+}
+
+while (<$fh>) {
+    chomp;
+    push @list, $_;
+}
+
+@list = shuffle @list unless $opts{'a'};
+
+foreach (@list) {
+    my $mp3 = File::Spec->catfile( $data, substr( sha256_hex($_), 0, 16 ) . ".mp3" );
+    my $start = time();
+    print "$_\n";
+    system 'mpg123', '-q', $mp3;
+    my $elapsed = time() - $start;
+    sleep($elapsed + 0.5);
+}
+
