@@ -18,6 +18,8 @@ open my $fh, '<', $opts{'t'};
 
 while (<$fh>) {
     chomp;
+    s/\r$//;
+    die "unexpected \\n or \\r character\n" if /[\r\n]/;
     my ( $s, $e, $t ) = split /\t/;
     my $out =
       File::Spec->catfile( $opts{'o'}, substr( sha256_hex($t), 0, 16 ) );
