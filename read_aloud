@@ -10,23 +10,23 @@ use File::Spec;
 
 my %opts;
 my $fh;
-my $data;
+my $audio_dir;
 my @list = ();
 
-getopts( 'rf:d:', \%opts );
+getopts( 'rt:a:', \%opts );
 
-if ( $opts{'f'} ) {
-    open $fh, '<', $opts{'f'};
+if ( $opts{'t'} ) {
+    open $fh, '<', $opts{'t'};
 }
 else {
     open $fh, '<-';
 }
 
-if ( $opts{'d'} ) {
-    $data = $opts{'d'};
+if ( $opts{'a'} ) {
+    $audio_dir = $opts{'a'};
 }
 elsif ( -e 'audio' ) {
-    $data = 'audio';
+    $audio_dir = 'audio';
 }
 else {
     die;
@@ -37,10 +37,10 @@ while (<$fh>) {
     push @list, $_;
 }
 
-@list = shuffle @list unless $opts{'a'};
+@list = shuffle @list unless $opts{'r'};
 
 foreach (@list) {
-    my $mp3 = File::Spec->catfile( $data, substr( sha256_hex($_), 0, 16 ) . ".mp3" );
+    my $mp3 = File::Spec->catfile( $audio_dir, substr( sha256_hex($_), 0, 16 ) . ".mp3" );
     my $start = time();
     print "$_\n";
     system 'mpg123', '-q', $mp3;
