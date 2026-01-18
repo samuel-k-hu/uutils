@@ -37,7 +37,7 @@ while (<$fh>) {
     push @list, $_;
 }
 
-@list = shuffle @list unless $opts{'r'};
+@list = shuffle @list if $opts{'r'};
 
 foreach (@list) {
     my $mp3 = File::Spec->catfile( $audio_dir, substr( sha256_hex($_), 0, 16 ) . ".mp3" );
