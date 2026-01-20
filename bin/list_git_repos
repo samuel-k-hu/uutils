@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+
+use strict;
+use File::Find;
+use FindBin;
+
+my $starting_point = @ARGV > 0 ? $ARGV[0] : $FindBin::Bin;
+
+find (
+    sub { 
+        print $File::Find::dir, "\n" if -d $_ && $_ eq '.git'; 
+        },
+    $ARGV[0]
+)
