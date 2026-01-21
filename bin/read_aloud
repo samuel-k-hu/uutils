@@ -41,11 +41,16 @@ while (<$fh>) {
 @list = shuffle @list if $opts{'r'};
 
 foreach (@list) {
-    my $mp3 = File::Spec->catfile( $audio_dir, substr( sha256_hex($_), 0, 16 ) . ".mp3" );
+    my $mp3 = File::Spec->catfile( $audio_dir,
+        substr( sha256_hex($_), 0, 16 ) . ".mp3" );
     my $start = time();
     print "$_\n";
     system 'mpg123', '-q', $mp3;
     my $elapsed = time() - $start;
-    sleep($elapsed + 0.5);
+    if ( $elapsed < 1 ) {
+        sleep(1);
+    }
+    else {
+        sleep( $elapsed + 0.5 );
+    }
 }
-
