@@ -3,6 +3,12 @@
 use strict;
 use warnings;
 use v5.36;
+no warnings 'utf8';
+
+use utf8;
+if ($^O eq 'MSWin32') {
+   binmode STDOUT, ':encoding(GBK)';
+}
 
 use Data::Dumper;
 
@@ -11,7 +17,7 @@ use Data::Dumper;
 
 my @report;
 
-open my $budgeting, 'budgeting.tsv';
+open my $budgeting, '<:encoding(UTF-8)',  'budgeting.tsv';
 while (<$budgeting>) {
     chomp;
     my ( $item, $value ) = split /\t/;
@@ -24,7 +30,7 @@ while (<$budgeting>) {
 }
 close($budgeting);
 
-open my $spending, 'spending.tsv';
+open my $spending, '<:encoding(UTF-8)', 'spending.tsv';
 while (<$spending>) {
     chomp;
     my ( $item, $value ) = split /\t/;
