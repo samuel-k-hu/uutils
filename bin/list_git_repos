@@ -3,12 +3,22 @@
 use strict;
 use File::Find;
 use Cwd;
+use File::Basename;
+use File::Which;
 
 my $starting_point = @ARGV > 0 ? $ARGV[0] : getcwd();
 
-find (
-    sub { 
-        print $File::Find::dir, "\n" if -d $_ && $_ eq '.git'; 
+if ( -x which('fd') ) {
+    foreach (`fd -H -t d -a \.git $starting_point`) {
+        chomp;
+        print dirname($_), "\n";
+    }
+}
+else {
+    find(
+        sub {
+            print $File::Find::dir, "\n" if -d $_ && $_ eq '.git';
         },
-    $starting_point
-)
+        $starting_point
+    );
+}
