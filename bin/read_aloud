@@ -7,13 +7,15 @@ use Getopt::Std qw(getopts);
 use List::Util  qw/shuffle/;
 use Digest::SHA qw(sha256_hex);
 use File::Spec;
+use File::Copy;
+use Cwd qw( abs_path );
 
 my %opts;
 my $fh;
 my $audio_dir;
 my @list = ();
 
-getopts( 'rt:a:', \%opts );
+getopts( 'qcrt:a:x:', \%opts );
 
 if ( $opts{'t'} ) {
     open $fh, '<', $opts{'t'};
@@ -41,16 +43,26 @@ while (<$fh>) {
 @list = shuffle @list if $opts{'r'};
 
 foreach (@list) {
-    my $mp3 = File::Spec->catfile( $audio_dir,
+    my $mp3 = File::Spec->catfile( abs_path($audio_dir),
         substr( sha256_hex($_), 0, 16 ) . ".mp3" );
-    my $start = time();
-    print "$_\n";
-    system 'mpg123', '-q', $mp3;
-    my $elapsed = time() - $start;
-    if ( $elapsed < 1 ) {
-        sleep(1);
+    if ( $opts{'x'} ) {
+        my $x_dir = abs_path($opts{'x'});
+        copy($mp3, $x_dir) or warn  "Copy $mp3 failed: $!";
+    }
+    elsif ($opts{'c'}) {
+       -f $mp3 or warn "$_ : $mp3";
     }
     else {
-        sleep( $elapsed + 0.5 );
+        my $start = time();
+        print "$_\n";
+        system 'mpg123', '-q', $mp3;
+        my $elapsed = time() - $start;
+        next if $opts{'q'};
+        if ( $elapsed < 1 ) {
+            sleep(1);
+        }
+        else {
+            sleep( $elapsed + 0.5 );
+        }
     }
 }
