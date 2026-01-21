@@ -2,13 +2,13 @@
 
 use strict;
 use File::Find;
-use FindBin;
+use Cwd;
 
-my $starting_point = @ARGV > 0 ? $ARGV[0] : $FindBin::Bin;
+my $starting_point = @ARGV > 0 ? $ARGV[0] : getcwd();
 
 find (
     sub { 
         print $File::Find::dir, "\n" if -d $_ && $_ eq '.git'; 
         },
-    $ARGV[0]
+    $starting_point
 )
