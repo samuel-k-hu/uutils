@@ -6,6 +6,8 @@ use File::Spec;
 use Digest::SHA qw(sha256_hex);
 use Getopt::Std qw(getopts);
 
+use utf8;
+
 my %opts;
 
 getopts( 'a:t:o:', \%opts );
