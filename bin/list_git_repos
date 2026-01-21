@@ -9,7 +9,7 @@ use File::Which;
 my $starting_point = @ARGV > 0 ? $ARGV[0] : getcwd();
 
 if ( -x which('fd') ) {
-    foreach (`fd -H -t d -a \.git $starting_point`) {
+    foreach (`fd -H -t d -a \^\.git\$ $starting_point`) {
         chomp;
         print dirname($_), "\n";
     }
