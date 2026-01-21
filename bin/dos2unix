@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use strict;
+
+die "No input file specified" if @ARGV < 1;
+
+my $file = shift;
+my @lines;
+
+open my $fh_in, '<', $file;
+while (<$fh_in>) {
+   chomp;
+   s/\r$//;
+   push @lines, $_;
+}
+close($fh_in);
+
+open my $fh_out, '>:raw', $file;
+foreach (@lines) {
+    print $fh_out "$_\n";
+}
+close($fh_out);
