@@ -8,10 +8,8 @@ use v5.36;
 -e 'spending.tsv'  or die "Can't find spending.tsv";
 
 
-my $original_code_page;
 if ($^O eq 'MSWin32') {
-    use Win32;
-    $original_code_page = Win32::GetConsoleOutputCP();
+    require Win32;
     Win32::SetConsoleOutputCP(65001);
 }
 
@@ -55,7 +53,3 @@ foreach (@report) {
 say "总预算\t$bs";
 say "总花销\t$ss";
 say "结余\t", $bs - $ss;
-
-if ($^O eq 'MSWin32') {
-    Win32::SetConsoleOutputCP($original_code_page);
-}
