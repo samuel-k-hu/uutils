@@ -10,6 +10,13 @@ use File::Spec;
 use File::Copy;
 use Cwd qw( abs_path );
 
+my $original_code_page;
+if ($^O eq 'MSWin32') {
+    use Win32;
+    $original_code_page = Win32::GetConsoleOutputCP();
+    Win32::SetConsoleOutputCP(65001);
+}
+
 my %opts;
 my $fh;
 my $audio_dir;
@@ -65,4 +72,8 @@ foreach (@list) {
             sleep( $elapsed + 0.5 );
         }
     }
+}
+
+if ($^O eq 'MSWin32') {
+    Win32::SetConsoleOutputCP($original_code_page);
 }

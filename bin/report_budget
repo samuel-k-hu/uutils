@@ -4,16 +4,16 @@ use strict;
 use warnings;
 use v5.36;
 
-use utf8;
-
-
-use Data::Dumper;
-
-use open IO => ':encoding(UTF-8)';
-use open ':std' => ':encoding(UTF-8)';
-
 -e 'budgeting.tsv' or die "Can't find budgeting.tsv";
 -e 'spending.tsv'  or die "Can't find spending.tsv";
+
+
+my $original_code_page;
+if ($^O eq 'MSWin32') {
+    use Win32;
+    $original_code_page = Win32::GetConsoleOutputCP();
+    Win32::SetConsoleOutputCP(65001);
+}
 
 my @report;
 
@@ -55,3 +55,7 @@ foreach (@report) {
 say "总预算\t$bs";
 say "总花销\t$ss";
 say "结余\t", $bs - $ss;
+
+if ($^O eq 'MSWin32') {
+    Win32::SetConsoleOutputCP($original_code_page);
+}
