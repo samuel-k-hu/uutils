@@ -1,0 +1,59 @@
+#!/usr/bin/perl
+
+use strict;
+
+use Cwd qw(getcwd abs_path);
+use File::Basename;
+use File::Find;
+use File::Path qw(make_path);
+use File::Spec::Functions qw(catfile abs2rel);
+use File::Spec;
+use File::Which;
+use Getopt::Std qw(getopts);
+
+my $pandoc = which('pandoc');
+die 'Please install Pandoc' unless -e $pandoc;
+die 'Pandoc is not an executable file' unless -x $pandoc;
+
+my %opts;
+getopts( 'i:o:', \%opts );
+
+my $base_dir = $opts{'i'} ? abs_path($opts{'o'}) : getcwd();
+my $output_dir = $opts{'o'} ? abs_path($opts{'o'}) : $base_dir;
+my @io = (); # ( {i => input1, od => output_dir, of => output_file } ...)
+
+my $from = join ('+', qw /
+	markdown
+	east_asian_line_breaks
+	subscript
+	superscript
+	yaml_metadata_block
+	table_captions
+	simple_tables
+	implicit_figures
+	multiline_tables
+	escaped_line_breaks
+/);
+
+sub md2html {
+    if (/md/) {
+        my ($name)     = fileparse( $_, ( '.md', '.markdown' ) );
+        my $out_name   = $name . '.html';
+        push @io,
+          (
+            {
+                i  => $_,
+                od => $output_dir,
+                of => catfile( $output_dir, abs2rel( dirname($_), $base_dir ), $out_name )
+            }
+          );
+    }
+}
+
+find ( { wanted => \&md2html, no_chdir => 1 }, $base_dir);
+
+foreach (@io) {
+    make_path( $_->{'od'} );
+    system( $pandoc, '-s', '-f', $from, '-t', 'html5', '--shift-heading-level-by=-1',
+        '--toc', '-o', $_->{'of'}, $_->{'i'} );
+}
