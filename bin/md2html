@@ -62,7 +62,7 @@ find ( { wanted => \&create_io, no_chdir => 1 }, $base_dir);
 
 foreach (@io) {
     make_path( $_->{'od'} );
-    system( $pandoc, '-s', '-f', $from, '-t', 'html5', '--shift-heading-level-by=-1',
+    system( $pandoc, '-s', '-f', $from, '-t', 'html5', '--shift-heading-level-by=-1', '--citeproc',
         '--template', $template, '--toc', '-o', $_->{'of'}, $_->{'i'} );
 }
 
