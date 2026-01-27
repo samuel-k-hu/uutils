@@ -20,7 +20,7 @@ my $fh;
 my $audio_dir;
 my @list = ();
 
-getopts( 'qcrt:a:x:n:', \%opts );
+getopts( 'qcrt:a:x:n:N:', \%opts );
 
 if ( $opts{'t'} ) {
     open $fh, '<', $opts{'t'};
@@ -45,8 +45,15 @@ while (<$fh>) {
     push @list, $_;
 }
 
-@list = @list[($#list -($opts{'n'} - 1)..$#list)] if $opts{'n'} && $opts{'n'} <= $#list;
-@list = shuffle @list if $opts{'r'};
+if ($opts{'n'} && $opts{'n'} <= $#list) {
+    @list = @list[($#list -($opts{'n'} - 1)..$#list)];
+    @list = shuffle @list if $opts{'r'};
+}
+
+if ($opts{'N'} && $opts{'N'} <= $#list) {
+    @list = shuffle @list;
+    @list = @list[($#list -($opts{'N'} - 1)..$#list)];
+}
 
 foreach (@list) {
     my $mp3 = File::Spec->catfile( abs_path($audio_dir),
