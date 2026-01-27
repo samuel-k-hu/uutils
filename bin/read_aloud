@@ -45,8 +45,8 @@ while (<$fh>) {
     push @list, $_;
 }
 
-@list = shuffle @list if $opts{'r'};
 @list = @list[($#list -($opts{'n'} - 1)..$#list)] if $opts{'n'} && $opts{'n'} <= $#list;
+@list = shuffle @list if $opts{'r'};
 
 foreach (@list) {
     my $mp3 = File::Spec->catfile( abs_path($audio_dir),
