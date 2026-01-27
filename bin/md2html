@@ -44,7 +44,7 @@ while (<DATA>) {
 close($template_fh);
 
 sub create_io {
-    if (/md/) {
+    if (/\.md$/) {
         my ($name)     = fileparse( $_, ( '.md', '.markdown' ) );
         my $out_name   = $name . '.html';
         push @io,
