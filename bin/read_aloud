@@ -55,6 +55,8 @@ if ($opts{'N'} && $opts{'N'} <= $#list) {
     @list = @list[($#list -($opts{'N'} - 1)..$#list)];
 }
 
+@list = shuffle @list if $opts{'r'};
+
 foreach (@list) {
     my $mp3 = File::Spec->catfile( abs_path($audio_dir),
         substr( sha256_hex($_), 0, 16 ) . ".mp3" );
