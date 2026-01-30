@@ -32,11 +32,12 @@ inc/
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+/Makefile
 
 # Carton/Carmel
 /local/
 /.carmel/
 # cpanfile.snapshot should generally be ignored for library code, otherwise included
-# cpanfile.snapshot 
+# cpanfile.snapshot
 
 /bin/*.bat
