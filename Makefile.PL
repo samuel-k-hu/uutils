@@ -3,9 +3,28 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+use FindBin qw($Bin);
+use File::Spec::Functions qw(catfile);
+
+open my $manifest_fh, '<:utf8', catfile($Bin, 'MANIFEST')
+	or die "Could not open MANIFEST: $!";
+
+my @exe_files;
+while( <$manifest_fh> ) {
+    chomp;
+    next if /\A\s*#/;
+    s/\s*#.*$//;
+    next unless m|\Abin/|;
+    push @exe_files, $_;
+}
+close $manifest_fh;
+
 my %WriteMakefileArgs = (
     NAME             => 'SKH::uutils',
     AUTHOR           => ['samuel-k-hu <zongnan.hu@gmail.com>'],
+
+    EXE_FILES        => \@exe_files,
+
     VERSION_FROM     => 'lib/SKH/uutils.pm',
     ABSTRACT_FROM    => 'lib/SKH/uutils.pm',
     LICENSE          => 'artistic_2',
