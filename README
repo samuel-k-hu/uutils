@@ -1,0 +1,36 @@
+UUTILS
+
+Some small and (mostly) useless tools.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc SKH::uutils
+
+You can also look for information at:
+
+    RT, CPAN's request tracker (report bugs here)
+        https://rt.cpan.org/NoAuth/Bugs.html?Dist=.
+
+    Search CPAN
+        https://metacpan.org/release/.
+
+
+LICENSE AND COPYRIGHT
+
+This software is Copyright (c) 2026 by samuel-k-hu <zongnan.hu@gmail.com>.
+
+This is free software, licensed under:
+
+  The BSD 2-Clause License

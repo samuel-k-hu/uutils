@@ -1,0 +1,26 @@
+bin/dos2unix
+bin/dos2unix.bat
+bin/hunspell_check
+bin/hunspell_check.bat
+bin/list_git_repos
+bin/list_git_repos.bat
+bin/md2html
+bin/md2html.bat
+bin/mp3clip
+bin/mp3clip.bat
+bin/read_aloud
+bin/read_aloud.bat
+bin/report_budget
+bin/report_budget.bat
+Changes
+install_windows.pl
+lib/SKH/uutils.pm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+README
+README.md
+t/00-load.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
