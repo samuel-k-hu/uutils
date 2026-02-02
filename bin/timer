@@ -1,0 +1,26 @@
+#! perl
+
+use v5.36;
+use utf8;
+use Win32;
+
+$| = 1;
+
+my $minutes = 10;
+$minutes = $ARGV[0] if @ARGV > 0;
+my $seconds = $minutes * 60;
+
+print "\e[2J\e[H";
+print "\r\033[2KProgress: 0%";
+for my $s (1..$seconds) {
+    sleep 1;
+    my $i = int($s/$seconds*100);
+    print "\r\033[2KProgress: $i%";
+}
+
+print "\e[2J\e[H";
+foreach (0..2) {
+    print "\a";
+    sleep 3;
+}
+print "\e[2J\e[H";

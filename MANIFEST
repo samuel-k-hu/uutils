@@ -1,10 +1,10 @@
 bin/dos2unix
 bin/hunspell_check
 bin/list_git_repos
-bin/md2html
 bin/mp3clip
 bin/read_aloud
 bin/report_budget
+bin/timer
 Changes
 lib/SKH/uutils.pm
 LICENSE
