@@ -1,0 +1,78 @@
+#! perl
+
+use v5.36;
+
+use Cwd qw(getcwd abs_path);
+use File::Which qw(which);
+use File::Basename;
+use File::Spec::Functions qw(catfile catdir abs2rel);
+use File::Find;
+use File::Path qw(make_path);
+
+my $pandoc = which('pandoc');
+die "Can't find pandoc" unless $pandoc;
+
+my $base_dir = getcwd();
+my $output_dir = catdir($base_dir, '_html');
+my $css = 'paper.css';
+
+my $from = join ('+', qw /
+	markdown
+	east_asian_line_breaks
+	subscript
+	superscript
+	yaml_metadata_block
+	table_captions
+	simple_tables
+	implicit_figures
+	multiline_tables
+	escaped_line_breaks
+/);
+
+my @io = (); # ( {i => input1, od => output_dir, of => output_file } ...)
+
+sub create_io {
+    if (/\.md$/) {
+        my ($name)     = fileparse( $_, ( '.md', '.markdown' ) );
+        my $out_name   = $name . '.html';
+        push @io,
+          (
+            {
+                i  => $_,
+                od => $output_dir,
+                of => catfile( $output_dir, abs2rel( dirname($_), $base_dir ), $out_name )
+            }
+          );
+    }
+}
+
+find ( { wanted => \&create_io, no_chdir => 1 }, $base_dir);
+
+my $header;
+if ($^O eq 'MSWin32') {
+	$header  = catfile ($ENV{USERPROFILE}, '.md2html_header');
+} else {
+	$header  = catfile ($ENV{HOME}, '.md2html_header');
+}
+
+unless (-e $header) {
+    open my $fh, '>', $header or die "Cannot create $header: $!";
+    close $fh;
+}
+
+foreach (@io) {
+	make_path( $_->{'od'} );
+	my @cmd = (
+		$pandoc, '-s',
+		'-f', $from,
+		'-t', 'html5',
+		'-H', $header,
+		'--shift-heading-level-by=-1',
+		'--toc',
+		'--mathml',
+		'-M', 'document-css=false',
+		'-o', $_->{'of'},
+		$_->{'i'},
+		);
+	system @cmd;
+}
