@@ -25,9 +25,6 @@ my $t = Time::Piece->strptime("$year-01-01", "%Y-%m-%d");
 my $mon = $t->strftime("%m");
 my $now = localtime;
 
-my @marks = qw(_ . | / x *);
-my @gray = (255, 251, 247, 243, 239, 235);
-
 print "$mon ";
 while ($t->year == $year) {
 	last if $t->epoch > $now->epoch;
@@ -39,7 +36,6 @@ while ($t->year == $year) {
 			$value += $record{$k};
 		}
 	}
-	my $g = $gray[$value];
 	if ($value == 0) {
 		print '_';
 	}
