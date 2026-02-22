@@ -23,12 +23,14 @@ my $data = $raw ? $json->decode($raw) : {};
 my $year = localtime->year;
 my $t = Time::Piece->strptime("$year-01-01", "%Y-%m-%d");
 my $mon = $t->strftime("%m");
+my $now = localtime;
 
 my @marks = qw(_ . | / x *);
 my @gray = (255, 251, 247, 243, 239, 235);
 
-print "$mon\t";
+print "$mon ";
 while ($t->year == $year) {
+	last if $t->epoch > $now->epoch;
 	my $date = $t->strftime("%Y-%m-%d");
 	my $value = 0;
 	if (defined($data->{$date})) {
@@ -50,6 +52,6 @@ while ($t->year == $year) {
 	$t += ONE_DAY;
 	if ($t->strftime("%m") != $mon and $t->year == $year) {
 		$mon = $t->strftime("%m");
-		print "\n$mon\t";
+		print "\n$mon ";
 	}
 }
