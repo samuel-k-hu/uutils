@@ -25,6 +25,9 @@ my %WriteMakefileArgs = (
 
     EXE_FILES        => \@exe_files,
 
+    INSTALLSITEMAN1DIR =>  catfile('$(SITEPREFIX)', 'man', 'man1'),
+    INSTALLSITEMAN3DIR =>  catfile('$(SITEPREFIX)', 'man', 'man3'),
+
     VERSION_FROM     => 'lib/SKH/uutils.pm',
     ABSTRACT_FROM    => 'lib/SKH/uutils.pm',
     LICENSE          => 'artistic_2',
