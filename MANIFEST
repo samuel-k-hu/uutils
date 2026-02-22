@@ -1,6 +1,7 @@
 bin/dos2unix
 bin/hunspell_check
 bin/list_git_repos
+bin/log_heatmap
 bin/md2html
 bin/mp3clip
 bin/read_aloud
