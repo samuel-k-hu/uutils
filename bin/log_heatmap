@@ -42,14 +42,17 @@ while ($t->year == $year) {
 			$value += $record{$k};
 		}
 	}
-	if ($value == 0) {
-		print '_';
-	}
-	elsif ($value == 5) {
+	if ($value >= 5) {
 		print 'x';
 	}
-	else {
+	elsif ($value >= 3) {
+		print '+';
+	}
+	elsif ($value >= 1) {
 		print '.';
+	}
+	else {
+		print '_';
 	}
 	$t += ONE_DAY;
 }
